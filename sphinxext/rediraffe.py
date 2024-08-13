@@ -15,6 +15,7 @@ from sphinx.builders.linkcheck import CheckExternalLinksBuilder
 from sphinx.errors import ExtensionError
 from sphinx.util import logging
 from sphinx.util.console import green, red, yellow  # pylint: disable=no-name-in-module
+from sphinx.util.matching import Matcher
 
 logger = logging.getLogger(__name__)
 
@@ -179,6 +180,7 @@ def build_redirects(app: Sphinx, exception: Union[Exception, None]) -> None:
         graph_edges = rediraffe_redirects
     elif isinstance(rediraffe_redirects, str):
         # filename
+
         path = Path(app.srcdir) / rediraffe_redirects
         if not path.is_file():
             logger.error(
@@ -188,7 +190,6 @@ def build_redirects(app: Sphinx, exception: Union[Exception, None]) -> None:
             )
             app.statuscode = 1
             return
-
         try:
             graph_edges = create_graph(path)
         except ExtensionError as e:
@@ -295,6 +296,7 @@ class CheckRedirectsDiffBuilder(Builder):
 
         source_suffixes = set(self.app.config.source_suffix)
         src_path = Path(self.app.srcdir)
+        excluded = Matcher(self.app.config.exclude_patterns)
 
         rediraffe_redirects = self.app.config.rediraffe_redirects
         redirects_path = None
@@ -374,6 +376,8 @@ class CheckRedirectsDiffBuilder(Builder):
         deleted_files = list(filter(lambda x: x != None, deleted_files))
 
         for deleted_file in deleted_files:
+            if excluded(str(deleted_file)):
+                continue
             if deleted_file in absolute_redirects:
                 logger.info(
                     f"deleted file {deleted_file} redirects to {absolute_redirects[deleted_file]}."
@@ -386,6 +390,10 @@ class CheckRedirectsDiffBuilder(Builder):
         with redirects_path.open("a") as redirects_file:
             for renamed_file in rename_hints:
                 hint_to, perc = rename_hints[renamed_file]
+
+
+                if excluded(str(renamed_file)):
+                    continue
 
                 if renamed_file in absolute_redirects:
                     logger.info(
