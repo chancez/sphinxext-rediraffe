@@ -452,10 +452,10 @@ class WriteRedirectsDiffBuilder(CheckRedirectsDiffBuilder):
 
 
 def setup(app: Sphinx) -> Dict[str, Any]:
-    app.add_config_value("rediraffe_redirects", None, None)
-    app.add_config_value("rediraffe_branch", "", None)
-    app.add_config_value("rediraffe_template", None, None)
-    app.add_config_value("rediraffe_auto_redirect_perc", 100, None)
+    app.add_config_value("rediraffe_redirects", None, "")
+    app.add_config_value("rediraffe_branch", "", "")
+    app.add_config_value("rediraffe_template", '', "")
+    app.add_config_value("rediraffe_auto_redirect_perc", 100, "")
 
     app.add_builder(CheckRedirectsDiffBuilder)
     app.add_builder(WriteRedirectsDiffBuilder)
