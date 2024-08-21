@@ -67,6 +67,9 @@ These values are placed in the conf.py of your sphinx project.
 * `rediraffe_auto_redirect_perc`
     * Optional. Only used by the `rediraffewritediff` builder. The percentage as an integer representing the accuracy required before auto redirecting with the `rediraffewritediff` builder. The default is 100.
 
+* `rediraffe_exclude_patterns`
+    * Optional. Define file patterns to ignore when checking and generating redirects.
+
 ## Example Config
 
 ### redirects only (file)

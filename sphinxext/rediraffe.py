@@ -296,7 +296,7 @@ class CheckRedirectsDiffBuilder(Builder):
 
         source_suffixes = set(self.app.config.source_suffix)
         src_path = Path(self.app.srcdir)
-        excluded = Matcher(self.app.config.exclude_patterns)
+        excluded = Matcher(self.app.config.exclude_patterns + self.app.config.rediraffe_exclude_patterns)
 
         rediraffe_redirects = self.app.config.rediraffe_redirects
         redirects_path = None
@@ -456,6 +456,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value("rediraffe_branch", "", "")
     app.add_config_value("rediraffe_template", '', "")
     app.add_config_value("rediraffe_auto_redirect_perc", 100, "")
+    app.add_config_value("rediraffe_exclude_patterns", [], "")
 
     app.add_builder(CheckRedirectsDiffBuilder)
     app.add_builder(WriteRedirectsDiffBuilder)
